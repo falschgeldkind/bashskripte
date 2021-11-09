@@ -5,37 +5,39 @@
 debug=false
 
 ### Useful variables for use in action()
-#path=/PATH/TO/DIRECTORY/
-#file=/PATH/TO/FILE
+#targetPath=/PATH/TO/DIRECTORY/
+#targetFile=/PATH/TO/FILE
 #
 
+### Action on file is defined within this function
+# $file contains the complete path to the current file the action acts on
 action() {
 ### Examples:
-#	echo "I would copy the file $file now to $path"
-#	rsync -arv $file $path --progress
 #	echo $file
+#	rsync -arv $file $targetPath --progress
 #	mv "$file" "$file.pdf"
+#	cat $file >> $targetFile
 }
 
 checkiffile() {
 	pFile=$1
 	if [ -d "${pFile}" ] ; then
-        if $debug; then
-            echo "${pFile} is a directory!"; 
-        fi
-	    exit 1
+		if $debug; then
+			echo "${pFile} is a directory!"; 
+		fi
+		exit 1
 	else
-	    if [ -f "${pFile}" ]; then
-            if $debug; then
-                echo "${pFile} is a regular file!";
-            fi
-            exit 0
-        else
-            if $debug; then
-                echo "${pFile} is neither a directory nor a regular file!";
-            fi
-            exit 2
-	    fi
+		if [ -f "${pFile}" ]; then
+			if $debug; then
+				echo "${pFile} is a regular file!";
+			fi
+			exit 0
+		else
+			if $debug; then
+				echo "${pFile} is neither a directory nor a regular file!";
+			fi
+			exit 2
+		fi
 	fi
 }
 
@@ -52,11 +54,8 @@ recursivesearch() {
 			#echo "$f"
 			#echo "directory"
 			recursivesearch $(realpath $f)
-		fi
-		
-		
+		fi		
 	done
-
 }
 
 recursivesearch $(realpath ./)
